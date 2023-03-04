@@ -24,3 +24,31 @@
     {{/each}}
     </tbody>
 </table>
+
+<h2>Expenses</h2>
+
+<form action="/expenses" method="POST">
+    <label for="source">Source:</label>
+    <input type="text" name="source" id="source" required>
+    <label for="amount">Amount:</label>
+    <input type="number" name="amount" id="amount" required>
+    <button type="submit">Add Income</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Amount</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each expenses}}
+        <tr>
+            <td>{{source}}</td>
+            <td>{{amount}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
+

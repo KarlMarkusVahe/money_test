@@ -28,10 +28,27 @@ router.post('/income', (req, res) => {
     });
 });
 
-router.get('/dashboard', (req, res) => {
-    db.query('SELECT * FROM income', (err, results) => {
+router.post('/expenses', (req, res) => {
+    const { source, amount } = req.body;
+    const sql = 'INSERT INTO expenses (source, amount) VALUES (?, ?)';
+    db.query(sql, [source, amount], (err, result) => {
         if (err) throw err;
-        res.render('dashboard', {income: results})
+        res.redirect('/dashboard');
+    });
+});
+
+router.get('/dashboard', (req, res) => {
+    db.query('SELECT * FROM income', (err, incomeResults) => {
+        if (err) throw err;
+
+        db.query('SELECT * FROM expenses', (err, expenseResults) => {
+            if (err) throw err;
+
+        res.render('dashboard', {
+                income: incomeResults,
+                expenses: expenseResults
+            })
+        })
     })
 })
 
