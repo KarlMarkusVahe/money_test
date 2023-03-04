@@ -1,0 +1,26 @@
+<h1>Dashboard</h1>
+
+<form action="/income" method="POST">
+    <label for="source">Source:</label>
+    <input type="text" name="source" id="source" required>
+    <label for="amount">Amount:</label>
+    <input type="number" name="amount" id="amount" required>
+    <button type="submit">Add Income</button>
+</form>
+
+<table>
+    <thead>
+    <tr>
+        <th>Amount</th>
+        <th>Description</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#each income}}
+        <tr>
+            <td>{{this.amount}}</td>
+            <td>{{this.source}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
