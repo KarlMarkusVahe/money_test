@@ -19,6 +19,7 @@
     "express-session": "^1.17.3",
     "mysql": "^2.18.1",
     "swagger-ui-express": "^4.6.2",
+    "uuid": "^9.0.0",
     "yamljs": "^0.3.0"
   }
 }

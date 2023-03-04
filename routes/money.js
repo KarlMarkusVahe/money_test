@@ -48,6 +48,7 @@ router.post('/dashboard', (req, res) => {
             // If the password is valid, redirect to the dashboard
             // Otherwise, redirect to the login page with an error message
             if (isPasswordValid) {
+                req.session.userId = user.id
                 res.redirect('/dashboard')
             } else {
                 const message = 'Invalid username or password'
@@ -59,8 +60,10 @@ router.post('/dashboard', (req, res) => {
 
 router.post('/income', (req, res) => {
     const { source, amount } = req.body;
-    const sql = 'INSERT INTO income (source, amount) VALUES (?, ?)';
-    db.query(sql, [source, amount], (err, result) => {
+    const userId = req.session.userId // Retrieve user ID from session object
+
+    const sql = 'INSERT INTO income (source, amount, user_id) VALUES (?, ?, ?)';
+    db.query(sql, [source, amount, userId], (err, result) => {
         if (err) throw err;
         res.redirect('/dashboard');
     });
@@ -68,21 +71,30 @@ router.post('/income', (req, res) => {
 
 router.post('/expenses', (req, res) => {
     const { source, amount } = req.body;
-    const sql = 'INSERT INTO expenses (source, amount) VALUES (?, ?)';
-    db.query(sql, [source, amount], (err, result) => {
+    const userId = req.session.userId // Retrieve user ID from session object
+
+    const sql = 'INSERT INTO expenses (source, amount, user_id) VALUES (?, ?, ?)';
+    db.query(sql, [source, amount, userId], (err, result) => {
         if (err) throw err;
         res.redirect('/dashboard');
     });
 });
 
 router.get('/dashboard', (req, res) => {
-    db.query('SELECT * FROM income', (err, incomeResults) => {
+    const userId = req.session.userId // Retrieve user ID from session object
+
+    // Check if user is authenticated
+    if (!req.session.userId) {
+        return res.redirect('/')
+    }
+
+    db.query('SELECT * FROM income', [userId], (err, incomeResults) => {
         if (err) throw err;
 
-        db.query('SELECT * FROM expenses', (err, expenseResults) => {
+        db.query('SELECT * FROM expenses', [userId], (err, expenseResults) => {
             if (err) throw err;
 
-        res.render('dashboard', {
+            res.render('dashboard', {
                 income: incomeResults,
                 expenses: expenseResults
             })

@@ -1,12 +1,24 @@
 const express = require('express')
+const session = require('express-session')
 const app = express()
 const path = require('path')
 const hbs = require('express-handlebars')
 const swaggerUi = require('swagger-ui-express');
 const yamlJs = require('yamljs');
 const swaggerDocument = yamlJs.load('./swagger.yaml');
+const { v4: uuidv4 } = require('uuid');
 
 require('dotenv').config();
+
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false},
+    genid: function (req) {
+        return uuidv4()
+    }
+}))
 
 const port = process.env.PORT || 3000;
 
