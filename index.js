@@ -44,6 +44,7 @@ const articleRoutes = require('./routes/money')
 
 app.use('/', articleRoutes)
 app.use('/dashboard', articleRoutes)
+app.use('/register', articleRoutes)
 
 app.listen(port, () => {
     console.log("App started")
