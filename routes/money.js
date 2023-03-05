@@ -13,13 +13,17 @@ router.get('/register', (req, res) => {
 
 router.post('/register', async (req, res) => {
     try {
-        const { username, password } = req.body
+        const { username, password, confirm_password } = req.body
+
+        if (password !== confirm_password) {
+            return res.status(400).send("Passwords don't match");
+        }
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
         const sql = 'INSERT INTO users (username, password) values (?, ?)'
         db.query(sql, [username, hashedPassword], (err, result) => {
-            if (err && err.code === 'ER_DUB_ENTRY') {
+            if (err && err.code === 'ER_DUP_ENTRY') {
                 res.render('register', { errorMessage: 'Username already exists'})
             } else if (err) {
                 console.error(err)
