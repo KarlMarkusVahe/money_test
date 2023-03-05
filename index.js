@@ -13,7 +13,7 @@ require('dotenv').config();
 app.use(session({
     secret: 'secret',
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: { secure: false},
     genid: function (req) {
         return uuidv4()

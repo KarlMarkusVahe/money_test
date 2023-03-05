@@ -19,8 +19,14 @@ router.post('/register', async (req, res) => {
 
         const sql = 'INSERT INTO users (username, password) values (?, ?)'
         db.query(sql, [username, hashedPassword], (err, result) => {
-            if (err) throw err
-            res.redirect('/')
+            if (err && err.code === 'ER_DUB_ENTRY') {
+                res.render('register', { errorMessage: 'Username already exists'})
+            } else if (err) {
+                console.error(err)
+                res.render('register', {errorMessage: 'an error occured'})
+            } else {
+                res.redirect('/')
+            }
         })
     } catch (error) {
         console.log(error)
